@@ -3,6 +3,10 @@ type Query{
     users: [User!]!
 }
 
+type Mutation{
+    register(user: UserInput!): Boolean
+}
+
 """ definiendo los atributos de los usuarios """
 
 type User{
@@ -13,5 +17,21 @@ type User{
     email: String!
     password: String!
     registerDate: String!
-    birthdate: String!
+    birthdate: String!,
+    role: Role!
+}
+
+input: UserInput {
+   id: ID,
+   name: String!
+    lastname: String!
+    email: String!
+    password: String!
+    birthdate: String!,
+    role: Role=CLIENT
+}
+
+enum Role{
+    CLIENT
+    ADMIN
 }
