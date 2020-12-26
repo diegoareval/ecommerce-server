@@ -3,6 +3,9 @@ import cors from "cors";
 import compression from "compression";
 import { createServer } from "http";
 import environments from "./config/environments";
+import { ApolloServer } from "apollo-server-express";
+import schema from "./schema"
+import expressPlayground from "graphql-playground-middleware-express"
 
 // configuracion de variables de entorno
 if (process.env.NODE_ENV !== "production") {
@@ -15,9 +18,16 @@ async function init() {
   app.use(cors());
   app.use(compression());
 
-  app.get("/", (_, res) => {
-    res.send("hola mundo");
+  const server = new ApolloServer({
+    schema,
+    introspection: true
   });
+
+  server.applyMiddleware({app});
+
+  app.get("/", expressPlayground({
+    endpoint: '/graphql'
+  }));
 
   const httpServer = createServer(app);
   const PORT = process.env.PORT || 2002;
@@ -25,7 +35,7 @@ async function init() {
     {
       port: PORT,
     },
-    () => console.log("port 2002")
+    () => console.log("running on port: "+PORT)
   );
 }
 
