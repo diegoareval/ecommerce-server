@@ -1,0 +1,1 @@
+init tsc npx tsc --init --rootDir src --outDir build --lib dom,es6 --module commonjs --target es6 --removeComments
