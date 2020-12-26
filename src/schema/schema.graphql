@@ -4,7 +4,7 @@ type Query{
 }
 
 type Mutation{
-    register(user: UserInput!): Boolean
+    register(user: UserInput!): User
 }
 
 """ definiendo los atributos de los usuarios """
@@ -23,7 +23,7 @@ type User{
 
 input UserInput{
     "id unico"
-    id: ID!
+    id: ID
     name: String!
     lastname: String!
     email: String!

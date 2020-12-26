@@ -14,8 +14,9 @@ class Database {
         if(client.isConnected()){
             console.log("+++++conected++++++++++++++");
             console.log(`Status: ${chalk.greenBright("online")}`);
-            console.log(`Status: ${chalk.greenBright(db.databaseName)}`);
+            console.log(`Database: ${chalk.greenBright(db.databaseName)}`);
         }
+        return db
     }
 }
 
