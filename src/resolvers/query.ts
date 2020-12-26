@@ -9,14 +9,14 @@ const resolversQuery: IResolvers = {
         // obtener la lista de todos los usuarios
         return {
           status: true,
-          message: "Lista cargada satisfactoriamente",
+          message: MESSAGES.LOAD_USERS_SUCCESS,
           users: await db.collection(COLLECTIONS.USERS).find().toArray()
         }
       } catch (err) {
         console.log(err);
         return {
           status: false,
-          message: "Ha ocurrido un error",
+          message: MESSAGES.LOAD_USERS_ERROR,
           users: []
         }
       }

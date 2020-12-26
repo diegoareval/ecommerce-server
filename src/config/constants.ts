@@ -13,7 +13,9 @@ export enum COLLECTIONS {
 export enum MESSAGES {
     TOKEN_VERIFY_FAILED= "Token no valido",
     LOGIN_ERROR= "Usuario y contrasenia incorrectos",
-    LOGIN_SUCCESS="Logueo exitoso"
+    LOGIN_SUCCESS="Logueo exitoso",
+    LOAD_USERS_ERROR="Ha ocurrido un error",
+    LOAD_USERS_SUCCESS="Lista cargada satisfactoriamente"
 }
 
 export enum EXPIRETIME{
