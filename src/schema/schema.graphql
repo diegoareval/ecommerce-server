@@ -1,7 +1,7 @@
 "Definicion de esquema"
 type Query{
     users: ResultUsers,
-    login(email: String!, password: String!)
+    login(email: String!, password: String!): ResultLogin
 }
 
 type Mutation{
@@ -26,6 +26,13 @@ type ResultUsers implements Result{
     status: Boolean!
     message: String!
     users: [User!]!
+}
+
+type ResultLogin implements Result{
+    status: Boolean!
+    message: String!
+    "INFORMACION DEL TOKEN DEL USUARIO LOGUEADO"
+    token: String
 }
 
 "user a recibir"

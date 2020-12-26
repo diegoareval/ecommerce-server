@@ -1,3 +1,10 @@
-export interface User{
-    id: string;
+export interface IUser{
+    id?: string,
+    name: string,
+    lastname: string,
+    email: string,
+    password: string,
+    registerDate: string,
+    birthdate: string,
+    role: string
 }
