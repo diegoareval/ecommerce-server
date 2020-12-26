@@ -1,7 +1,7 @@
 import { COLLECTIONS } from './../config/constants';
 import { IResolvers } from "graphql-tools";
 
-
+// mutation para registrar usuario
 const resolversMutation: IResolvers = {
   Mutation:{
     async register(_, {user}, {db}){       

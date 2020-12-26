@@ -6,7 +6,10 @@ import resolvers from '../resolvers'
 
 const schema: GraphQLSchema = makeExecutableSchema({
     typeDefs,
-    resolvers
+    resolvers,
+    resolverValidationOptions: {
+        requireResolversForResolveType: undefined
+    }
 })
 
 export default schema

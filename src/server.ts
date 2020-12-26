@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== "production") {
   const env = environments;
   console.log(env);
 }
-
+ // inicializar aplicacion
 async function init() {
   const app = express();
   const database = new Database()

@@ -5,10 +5,19 @@ const resolversQuery: IResolvers = {
   Query: {
     async users(_, __, { db }) {
       try {
-        return await db.collection(COLLECTIONS.USERS).find().toArray();
+        // obtener la lista de todos los usuarios
+        return {
+          status: true,
+          message: "Lista cargada satisfactoriamente",
+          users: await db.collection(COLLECTIONS.USERS).find().toArray()
+        }
       } catch (err) {
         console.log(err);
-        return [];
+        return {
+          status: false,
+          message: "Ha ocurrido un error",
+          users: []
+        }
       }
     },
   },

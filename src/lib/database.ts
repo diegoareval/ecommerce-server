@@ -1,7 +1,9 @@
 import mongoClient from "mongodb";
 import chalk from "chalk"
 class Database {
+    // inicializar conexion con la base de datos
     async init(){
+        // extraendo informacion de variables de entorno
         const MONGO_DB = process.env.DATABASE || "mongodb://localhost:27017/ecommerce2020"
         const client =await mongoClient.connect(
             MONGO_DB,

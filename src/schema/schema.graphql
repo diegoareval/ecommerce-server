@@ -1,6 +1,7 @@
 "Definicion de esquema"
 type Query{
-    users: [User!]!
+    users: ResultUsers,
+    login(email: String!, password: String!)
 }
 
 type Mutation{
@@ -21,6 +22,13 @@ type User{
     role: Role!
 }
 
+type ResultUsers implements Result{
+    status: Boolean!
+    message: String!
+    users: [User!]!
+}
+
+"user a recibir"
 input UserInput{
     "id unico"
     id: ID
@@ -31,8 +39,13 @@ input UserInput{
     birthdate: String!,
     role: Role=CLIENT
 }
-
+"roles de usuario"
 enum Role {
     CLIENT
     ADMIN
+}
+
+interface Result{
+    status: Boolean!
+    message: String!
 }
