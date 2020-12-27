@@ -1,3 +1,4 @@
+import { IContext } from './interfaces/context.interface';
 import express from "express";
 import cors from "cors";
 import compression from "compression";
@@ -20,7 +21,14 @@ async function init() {
   app.use(cors());
   app.use(compression());
    const db = await database.init()
-   const context = {db}
+   
+   const context = async({req, connection}: IContext)=>{
+      const token = req? req.headers.authorization: connection.authorization;
+      return {
+        db,
+        token
+      }
+   };
   const server = new ApolloServer({
     schema,
     introspection: true,

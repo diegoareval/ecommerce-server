@@ -11,11 +11,16 @@ export enum COLLECTIONS {
 }
 
 export enum MESSAGES {
-    TOKEN_VERIFY_FAILED= "Token no valido",
+    TOKEN_VERIFY_FAILED= "Token no valido, Inicia sesion de nuevo",
     LOGIN_ERROR= "Usuario y contrasenia incorrectos",
     LOGIN_SUCCESS="Logueo exitoso",
     LOAD_USERS_ERROR="Ha ocurrido un error",
-    LOAD_USERS_SUCCESS="Lista cargada satisfactoriamente"
+    LOAD_USERS_SUCCESS="Lista cargada satisfactoriamente",
+    USER_NOT_FOUND="Usuario no encontrado",
+    USER_EXIST="Usuario ya existe: ",
+    REGISTER_ERROR="Error al registrar usuario",
+    REGISTER_SUCCESS="Se ha registrado el usuario correctamente",
+    TOKEN_SUCCESS="Usuario autenticado correctamente mediante token"
 }
 
 export enum EXPIRETIME{

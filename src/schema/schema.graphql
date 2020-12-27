@@ -2,10 +2,12 @@
 type Query{
     users: ResultUsers,
     login(email: String!, password: String!): ResultLogin
+    "AUTENTICACION CON TOKEN"
+    me: ResultUserRegister
 }
 
 type Mutation{
-    register(user: UserInput!): User
+    register(user: UserInput!): ResultUserRegister
 }
 
 """ definiendo los atributos de los usuarios """
@@ -33,6 +35,12 @@ type ResultLogin implements Result{
     message: String!
     "INFORMACION DEL TOKEN DEL USUARIO LOGUEADO"
     token: String
+}
+
+type ResultUserRegister implements Result{
+    status: Boolean!
+    message: String!
+    user: User
 }
 
 "user a recibir"

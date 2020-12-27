@@ -1,6 +1,7 @@
-import { COLLECTIONS, MESSAGES } from "./../config/constants";
+import { COLLECTIONS, MESSAGES, EXPIRETIME } from "./../config/constants";
 import { IResolvers } from "graphql-tools";
 import JWT from "../lib/jwt";
+import bcrypt from "bcrypt"
 
 const resolversQuery: IResolvers = {
   Query: {
@@ -23,19 +24,20 @@ const resolversQuery: IResolvers = {
     },
     async login(_, {email, password}, {db}){
       try {
-        const emailVerify = await db.collection(COLLECTIONS.USERS).findOne({email})
-        if(emailVerify === null) {
+        const user = await db.collection(COLLECTIONS.USERS).findOne({email})
+        if(user === null) {
           return{
             status: false,
-            message: "Usuario no existe",
+            message: MESSAGES.USER_NOT_FOUND,
             token: null
           }
         }
         // obtener el usuario
-        const user = await db.collection(COLLECTIONS.USERS).findOne({email, password})
-        const message = (user === null)? MESSAGES.LOGIN_ERROR: MESSAGES.LOGIN_SUCCESS
+       // const user = await db.collection(COLLECTIONS.USERS).findOne({email, password})
+       const passwordCheck = bcrypt.compareSync(password, user.password);
+        const message = !passwordCheck? MESSAGES.LOGIN_ERROR: MESSAGES.LOGIN_SUCCESS
 
-        if(user !==null){
+        if(passwordCheck !==null){
           delete user.password
           delete user.registerDate
           delete user.birthdate
@@ -43,7 +45,7 @@ const resolversQuery: IResolvers = {
         return {
           status: true,
           message,
-          token: (user === null)? null : new JWT().sign({user})
+          token: (!passwordCheck)? null : new JWT().sign({user}, EXPIRETIME.H24)
         }
       } catch (err) {
         console.log(err);
@@ -53,6 +55,22 @@ const resolversQuery: IResolvers = {
           token: null
         }
       }
+    },
+    async me(_, __, {token}){
+      console.log(token);
+      let info = new JWT().verify(token);
+      if(info===MESSAGES.TOKEN_VERIFY_FAILED){
+        return {
+          status: false,
+          message: info,
+          user: null
+        };
+      }
+      return {
+          status: true,
+          message: MESSAGES.TOKEN_SUCCESS,
+          user: Object.values(info)[0]
+      };
     }
   },
 };
