@@ -1,0 +1,5 @@
+type ResultUserRegister implements Result{
+    status: Boolean!
+    message: String!
+    user: User
+}

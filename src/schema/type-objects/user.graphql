@@ -1,0 +1,13 @@
+""" definiendo los atributos de los usuarios """
+
+type User{
+    "id unico"
+    id: ID!
+    name: String!
+    lastname: String!
+    email: String!
+    password: String!
+    registerDate: String!
+    birthdate: String!,
+    role: Role!
+}

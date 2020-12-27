@@ -1,0 +1,5 @@
+"roles de usuario"
+enum Role {
+    CLIENT
+    ADMIN
+}

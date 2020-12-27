@@ -1,0 +1,11 @@
+"user a recibir"
+input UserInput{
+    "id unico"
+    id: ID
+    name: String!
+    lastname: String!
+    email: String!
+    password: String!
+    birthdate: String!,
+    role: Role=CLIENT
+}

@@ -1,13 +1,14 @@
-import { COLLECTIONS, MESSAGES } from './../config/constants';
+import { assignDocumentId, findOneElement, insertOneElement } from './../../lib/db-operations';
+import { COLLECTIONS, MESSAGES } from './../../config/constants';
 import { IResolvers } from "graphql-tools";
-import PasswordSecurity from "../lib/hash"
+import PasswordSecurity from "./../../lib/hash"
 
 // mutation para registrar usuario
-const resolversMutation: IResolvers = {
+const resolversUsersMutation: IResolvers = {
   Mutation:{
     async register(_, {user}, {db}){     
       // comprobar si usuario existe
-      const checkUser  = await db.collection(COLLECTIONS.USERS).findOne({email: user.email}) 
+      const checkUser  = await findOneElement(COLLECTIONS.USERS, db, {email: user.email}) 
       if(checkUser !== null) {
         return {
           status: false,
@@ -16,20 +17,13 @@ const resolversMutation: IResolvers = {
         }
       }
         // comprobar el ultimo usuario para obtener el id
-        const lastUser = await db.collection(COLLECTIONS.USERS).
-        find().limit(1).sort({registerDate: -1}).toArray();
-
-        if(lastUser.length === 0) {
-            user.id = 1
-        }else{
-            user.id = lastUser[0].id+1
-        }
+        user.id = await assignDocumentId(db, COLLECTIONS.USERS)
         // asignar la fecha
           user.registerDate = new Date().toISOString()
           // encriptar password
           user.password = new PasswordSecurity().hash(user.password)
         // guardar el documento
-        return await db.collection(COLLECTIONS.USERS).insertOne(user).then(async () =>{
+        return await insertOneElement(COLLECTIONS.USERS, db, user).then(async () =>{
            return {
              status: true,
              message: MESSAGES.REGISTER_SUCCESS,
@@ -47,4 +41,4 @@ const resolversMutation: IResolvers = {
   }
 }
 
-export default resolversMutation;
+export default resolversUsersMutation;
