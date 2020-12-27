@@ -1,6 +1,6 @@
 import { COLLECTIONS, MESSAGES } from './../config/constants';
 import { IResolvers } from "graphql-tools";
-import bcrypt from "bcrypt"
+import PasswordSecurity from "../lib/hash"
 
 // mutation para registrar usuario
 const resolversMutation: IResolvers = {
@@ -27,7 +27,7 @@ const resolversMutation: IResolvers = {
         // asignar la fecha
           user.registerDate = new Date().toISOString()
           // encriptar password
-          user.password = bcrypt.hashSync(user.password, 10);
+          user.password = new PasswordSecurity().hash(user.password)
         // guardar el documento
         return await db.collection(COLLECTIONS.USERS).insertOne(user).then(async () =>{
            return {
