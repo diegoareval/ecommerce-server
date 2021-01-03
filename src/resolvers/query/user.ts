@@ -48,6 +48,7 @@ const resolversUsersQuery: IResolvers = {
           delete user.birthdate;
         }
         return {
+          user,
           status: true,
           message,
           token: !passwordCheck
