@@ -4,5 +4,5 @@ type Query{
     login(email: String!, password: String!): ResultLogin
     "AUTENTICACION CON TOKEN"
     me: ResultUserRegister
-    products: Boolean
+    genres: ResultGenre
 }

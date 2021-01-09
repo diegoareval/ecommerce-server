@@ -1,0 +1,5 @@
+interface Item {
+    id: ID!
+    name: String!
+    slug: String!
+}
