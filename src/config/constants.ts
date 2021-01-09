@@ -7,7 +7,8 @@ if(process.env.NODE_ENV !=='production'){
 export const SECRET_KEY = process.env.SECRET || 'diego'
 
 export enum COLLECTIONS {
-    USERS='users'
+    USERS='users',
+    GENRES='genres'
 }
 
 export enum MESSAGES {
@@ -20,7 +21,9 @@ export enum MESSAGES {
     USER_EXIST="Usuario ya existe: ",
     REGISTER_ERROR="Error al registrar usuario",
     REGISTER_SUCCESS="Se ha registrado el usuario correctamente",
-    TOKEN_SUCCESS="Usuario autenticado correctamente mediante token"
+    TOKEN_SUCCESS="Usuario autenticado correctamente mediante token",
+    GENRES_SUCCESS="Lista de generos cargada correctamente",
+    GENRES_ERROR="No se pudo obtener los generos:"
 }
 
 export enum EXPIRETIME{
