@@ -1,41 +1,71 @@
-import { IContextData } from './../interfaces/context-data.interface';
+import { IVariables } from "./../interfaces/variable.interface";
+import { findOneElement } from "./../lib/db-operations";
+import { IContextData } from "./../interfaces/context-data.interface";
 import { findAllElements } from "../lib/db-operations";
 
- class ResolverOperationsServices {
-    private root: object;
-    private variables: object;
-    private context: IContextData;
-    constructor(root: object, variables: object, context: IContextData){
-     this.root = root;
-     this.variables = variables;
-     this.context = context;
+class ResolverOperationsServices {
+  private root: object;
+  private variables: IVariables;
+  private context: IContextData;
+  constructor(root: object, variables: IVariables, context: IContextData) {
+    this.root = root;
+    this.variables = variables;
+    this.context = context;
+  }
+
+  // listar informacion
+  protected async list(collection: string, listElement: string) {
+    try {
+      return {
+        status: true,
+        message: `Lista de ${listElement} cargada correctamente`,
+        items: await findAllElements(collection, this.context.db),
+      };
+    } catch (error) {
+      return {
+        status: false,
+        message: `La lista de ${listElement} no se pudo cargar: ${error}`,
+        items: null,
+      };
     }
+  }
 
-    // listar informacion
-    protected async list(collection: string, listElement: string){
-        try{
-            return {
-                status: true,
-                message: `Lista de ${listElement} cargada correctamente`,
-                items: await findAllElements(collection, this.context.db)
-            };
-         }
-         catch(error){
-           return {
-               status: false,
-               message: `La lista de ${listElement} no se pudo cargar: ${error}`,
-               items: null
-           };
-         }
+  // detalles de un item especifico
+  protected async get(collection: string) {
+    const collectionLabel = collection
+      .toLowerCase()
+      .substr(0, collection.length - 1);
+    try {
+      return await findOneElement(collection, this.context.db, {
+        id: this.variables.id,
+      }).then((result) => {
+        if (result) {
+          return {
+            status: true,
+            message: `${collectionLabel} ha sido cargada correctamente con sus detalles`,
+            item: result,
+          };
+        }
+        return {
+          status: true,
+          message: `${collectionLabel} no ha obtenido detalles porque no existe`,
+          item: null,
+        };
+      });
+    } catch (error) {
+      return {
+        status: false,
+        message: `Error inesperado al querer cargar los detalles de ${collectionLabel}`,
+        item: null,
+      };
     }
-    
-    // detalles de un item especifico
+  }
 
-    // agregar item
+  // agregar item
 
-    // modificar item
+  // modificar item
 
-    // eliminar item
+  // eliminar item
 }
 
-export default ResolverOperationsServices
+export default ResolverOperationsServices;

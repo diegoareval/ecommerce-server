@@ -18,6 +18,17 @@ class GenreService extends ResolverOperationsServices{
         }
     }
 
+    async detail(){
+        const result = await this.get(COLLECTIONS.GENRES)
+        // console.log("resultado",result.genre?.item);
+        
+        return {
+           status: result.status,
+           message: result.message,
+           genre: result.item
+        }
+    }
+
     // listar informacion
   
 
