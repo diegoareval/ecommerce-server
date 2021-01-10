@@ -75,6 +75,31 @@ class UserService extends ResolverOperationsServices {
           };
   } 
 
+  // update 
+  async modify() {
+    const user = this.getVariables().user;
+    // comprobar que user no es null
+    if (user === null) {
+      return {
+        status: false,
+        message: 'Usuario no definido, procura definirlo',
+        user: null,
+      };
+    }
+    const filter = { id: user?.id };
+    const result = await this.update(
+      this.collection,
+      filter,
+      user || {},
+      'usuario'
+    );
+    return {
+      status: result.status,
+      message: result.message,
+      user: result.item,
+    };
+  }
+
   // eliminar
   async delete(){
     const id = this.getVariables().id;

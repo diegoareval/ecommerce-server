@@ -9,6 +9,9 @@ const resolversUsersMutation: IResolvers = {
     },
     deleteUser(_, variables, context){
       return new UserService(_, variables, context).delete()
+    },
+    updateUser(_, variables, context){
+      return new UserService(_, variables, context).modify()
     }
   }
 }
