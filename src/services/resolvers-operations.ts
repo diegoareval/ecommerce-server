@@ -16,14 +16,15 @@ class ResolverOperationsServices {
  
   protected getVariables(): IVariables {return this.variables}
 
-  protected getDb(): Db {return this.context.db}
+  protected getDb(): Db {return this.context.db!}
+  protected getToken(): string {return this.context.token!}
   // listar informacion
   protected async list(collection: string, listElement: string) {
     try {
       return {
         status: true,
         message: `Lista de ${listElement} cargada correctamente`,
-        items: await findAllElements(collection, this.context.db),
+        items: await findAllElements(collection, this.getDb()),
       };
     } catch (error) {
       return {
@@ -40,7 +41,7 @@ class ResolverOperationsServices {
       .toLowerCase()
       .substr(0, collection.length - 1);
     try {
-      return await findOneElement(collection, this.context.db, {
+      return await findOneElement(collection, this.getDb(), {
         id: this.variables.id,
       }).then((result) => {
         if (result) {

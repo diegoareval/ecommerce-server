@@ -23,6 +23,23 @@ class UserService extends ResolverOperationsServices {
     };
   }
 
+  // autenticarnos
+  async auth(){
+    let info = new JWT().verify(this.getToken());
+    if (info === MESSAGES.TOKEN_VERIFY_FAILED) {
+      return {
+        status: false,
+        message: info,
+        user: null,
+      };
+    }
+    return {
+      status: true,
+      message: MESSAGES.TOKEN_SUCCESS,
+      user: Object.values(info)[0],
+    };
+  }
+
   // login
   async login(){
       const variables = this.getVariables().user

@@ -13,23 +13,10 @@ const resolversUsersQuery: IResolvers = {
     async login(_, { email, password }, context) {
       return new UserService(_, {user:{email, password}}, context).login();
     },
-    async me(_, __, { token }) {
-      console.log(token);
-      let info = new JWT().verify(token);
-      if (info === MESSAGES.TOKEN_VERIFY_FAILED) {
-        return {
-          status: false,
-          message: info,
-          user: null,
-        };
-      }
-      return {
-        status: true,
-        message: MESSAGES.TOKEN_SUCCESS,
-        user: Object.values(info)[0],
-      };
-    },
+    async me(_, __, context) {
+      return new UserService(_,__, context).auth()
   },
+}
 };
 
 export default resolversUsersQuery;
