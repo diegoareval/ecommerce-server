@@ -1,5 +1,3 @@
-import { assignDocumentId, findOneElement, insertOneElement } from './../../lib/db-operations';
-import { COLLECTIONS, MESSAGES } from './../../config/constants';
 import { IResolvers } from "graphql-tools";
 import GenreService from '../../services/genre.service';
 

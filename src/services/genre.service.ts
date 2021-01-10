@@ -63,13 +63,39 @@ class GenreService extends ResolverOperationsServices {
     };
   }
 
-  async modify(){
-    const id = {id: '4'}
-    const objectUpdate = {
-      name: "action 1",
-      slug: slugify("action 1", {lower: true})
+  async modify() {
+    const id = this.getVariables().id;
+    const genre = this.getVariables().genre;
+
+    // comprobar que el id es correcto
+    if (!this.checkData(String(id) || "")) {
+      return {
+        status: false,
+        message: "Debes especificar correctamente el elemento a editar",
+        genre: null,
+      };
     }
-    const result = await this.update(this.collection, id, objectUpdate, "genero")
+
+    if (!this.checkData(genre || "")) {
+      return {
+        status: false,
+        message:
+          "Debes especificar correctamente el genero del elemento a editar",
+        genre: null,
+      };
+    }
+    // payload
+    const objectUpdate = {
+      name: genre,
+      slug: slugify(genre || "", { lower: true }),
+    };
+    // actualizar elemento
+    const result = await this.update(
+      this.collection,
+      { id },
+      objectUpdate,
+      "genero"
+    );
     return {
       status: result.status,
       message: result.message,
