@@ -120,6 +120,9 @@ class ResolverOperationsServices {
   }
 
   // eliminar item
+  protected async remove(collection: string, filter: object, item: string) {
+
+  }
 }
 
 export default ResolverOperationsServices;

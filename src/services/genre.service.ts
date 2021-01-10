@@ -103,6 +103,10 @@ class GenreService extends ResolverOperationsServices {
     };
   }
 
+  async remove(){
+
+  }
+
   private checkData(value: string) {
     return value === "" || value === undefined ? false : true;
   }

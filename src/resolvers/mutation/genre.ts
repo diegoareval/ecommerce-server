@@ -9,6 +9,9 @@ const resolversGenreMutation: IResolvers = {
     },
     updateGenre(_, variables, context){
       return new GenreService(_,variables, context).modify();
+     },
+     deleteGenre(_, variables, context){
+      return new GenreService(_,variables, context).remove();
      }
   }
 }
