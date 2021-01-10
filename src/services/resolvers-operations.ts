@@ -91,8 +91,33 @@ class ResolverOperationsServices {
   }
 
   // modificar item
-  protected update(collection: string, filter: object, objectUpdate: object, item: string){
-
+  protected async update(collection: string, filter: object, objectUpdate: object, item: string){
+       try{
+        return await this.getDb().collection(collection).updateOne(
+          filter, {
+            $set:objectUpdate
+          }
+        ).then((res)=>{
+          if(res.result.nModified === 1 && res.result.ok ){
+            return {
+              status: true,
+              message: `se actualizo correctamente el ${item}`,
+              item: Object.assign({}, filter, objectUpdate)
+            };
+          }
+          return {
+            status: false,
+            message: `No se ha actualizado el ${item}`,
+            item: null
+          };
+        })
+       }catch(error){
+        return {
+          status: false,
+          message: `error inesperado al actualizar el ${item}`,
+          item: null
+        };
+       }
   }
 
   // eliminar item

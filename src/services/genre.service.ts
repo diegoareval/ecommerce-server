@@ -64,7 +64,17 @@ class GenreService extends ResolverOperationsServices {
   }
 
   async modify(){
-    
+    const id = {id: '4'}
+    const objectUpdate = {
+      name: "action 1",
+      slug: slugify("action 1", {lower: true})
+    }
+    const result = await this.update(this.collection, id, objectUpdate, "genero")
+    return {
+      status: result.status,
+      message: result.message,
+      genre: result.item,
+    };
   }
 
   private checkData(value: string) {
