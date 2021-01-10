@@ -10,46 +10,8 @@ const resolversUsersQuery: IResolvers = {
     async users(_, __, context) {
       return new UserService(_, __, context).items();
     },
-    async login(_, { email, password }, { db }) {
-      try {
-        const user = await findOneElement(COLLECTIONS.USERS, db, { email });
-        if (user === null) {
-          return {
-            status: false,
-            message: MESSAGES.USER_NOT_FOUND,
-            token: null,
-          };
-        }
-        // obtener el usuario
-        const passwordCheck = new PasswordSecurity().compareHashedPassword(
-          password,
-          user.password
-        );
-        const message = !passwordCheck
-          ? MESSAGES.LOGIN_ERROR
-          : MESSAGES.LOGIN_SUCCESS;
-
-        if (passwordCheck !== null) {
-          delete user.password;
-          delete user.registerDate;
-          delete user.birthdate;
-        }
-        return {
-          user,
-          status: true,
-          message,
-          token: !passwordCheck
-            ? null
-            : new JWT().sign({ user }, EXPIRETIME.H24),
-        };
-      } catch (err) {
-        console.log(err);
-        return {
-          status: false,
-          message: MESSAGES.LOGIN_ERROR,
-          token: null,
-        };
-      }
+    async login(_, { email, password }, context) {
+      return new UserService(_, {user:{email, password}}, context).login();
     },
     async me(_, __, { token }) {
       console.log(token);
