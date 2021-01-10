@@ -1,3 +1,4 @@
 export interface IVariables {
-    id?: number | string
+    id?: number | string,
+    genre?: string
 }

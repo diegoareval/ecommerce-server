@@ -30,18 +30,37 @@ class GenreService extends ResolverOperationsServices{
     }
 
    async insert(){
+       // comprobar que no esta en blanco y no esta indefinido
+       const genre = this.getVariables().genre;
+       if(!this.checkData(genre || '')){
+          return {
+              status: false,
+              message: "El genero no se ha podido crear, especificarlo correctamente",
+              genre: null
+          }
+       }
+       // comprobar que no existe
+       // si valida las opciones anterior insertar documento
+       const genreObject = {
+           id: '',
+           name: '',
+           slug: ''
+       }
     const result = await this.add(COLLECTIONS.GENRES, {
         id: "85",
         name: "realidad virtual",
         slug: "realidad-virtual"
     }, 'genero')
-    // console.log("resultado",result.genre?.item);
     
     return {
        status: result.status,
        message: result.message,
        genre: result.item
     }
+   }
+
+   private checkData(value: string) {
+       return (value === '' || value===undefined)? false : true
    }
 }
 
