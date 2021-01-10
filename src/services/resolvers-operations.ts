@@ -1,3 +1,4 @@
+import { updateOneElement } from './../lib/db-operations';
 import { IVariables } from "./../interfaces/variable.interface";
 import { IContextData } from "./../interfaces/context-data.interface";
 import { findAllElements, insertOneElement, findOneElement } from "../lib/db-operations";
@@ -93,11 +94,9 @@ class ResolverOperationsServices {
   // modificar item
   protected async update(collection: string, filter: object, objectUpdate: object, item: string){
        try{
-        return await this.getDb().collection(collection).updateOne(
-          filter, {
-            $set:objectUpdate
-          }
-        ).then((res)=>{
+        return await updateOneElement(collection, this.context.db, filter, {
+          $set:objectUpdate
+        }).then((res)=>{
           if(res.result.nModified === 1 && res.result.ok ){
             return {
               status: true,
