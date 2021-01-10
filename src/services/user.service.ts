@@ -1,3 +1,4 @@
+import { checkData } from './../lib/utils';
 import { findOneElement, assignDocumentId } from './../lib/db-operations';
 
 import { COLLECTIONS, EXPIRETIME, MESSAGES } from "./../config/constants";
@@ -74,6 +75,29 @@ class UserService extends ResolverOperationsServices {
           };
   } 
 
+  // eliminar
+  async delete(){
+    const id = this.getVariables().id;
+
+    if (!checkData(String(id) || "")) {
+      return {
+        status: false,
+        message: "Debes especificar correctamente el elemento a eliminar",
+        genre: null,
+      };
+    }
+    const result = await this.remove(
+      this.collection,
+      { id },
+      "usuarios"
+    );
+    return {
+      status: result.status,
+      message: result.message,
+      user: null,
+    };
+  }
+
   // login
   async login(){
       const variables = this.getVariables().user
@@ -117,6 +141,8 @@ class UserService extends ResolverOperationsServices {
         };
       }
   }
+
+
 
 }
 

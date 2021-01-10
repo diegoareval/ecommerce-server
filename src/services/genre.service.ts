@@ -1,3 +1,4 @@
+import { checkData } from './../lib/utils';
 import { findOneElement, assignDocumentId } from "./../lib/db-operations";
 import { COLLECTIONS } from "./../config/constants";
 import { IContextData } from "./../interfaces/context-data.interface";
@@ -34,7 +35,7 @@ class GenreService extends ResolverOperationsServices {
   async insert() {
     // comprobar que no esta en blanco y no esta indefinido
     const genre = this.getVariables().genre;
-    if (!this.checkData(genre || "")) {
+    if (!checkData(genre || "")) {
       return {
         status: false,
         message: "El genero no se ha podido crear, especificarlo correctamente",
@@ -71,7 +72,7 @@ class GenreService extends ResolverOperationsServices {
     const genre = this.getVariables().genre;
 
     // comprobar que el id es correcto
-    if (!this.checkData(String(id) || "")) {
+    if (!checkData(String(id) || "")) {
       return {
         status: false,
         message: "Debes especificar correctamente el elemento a editar",
@@ -79,7 +80,7 @@ class GenreService extends ResolverOperationsServices {
       };
     }
 
-    if (!this.checkData(genre || "")) {
+    if (!checkData(genre || "")) {
       return {
         status: false,
         message:
@@ -109,7 +110,7 @@ class GenreService extends ResolverOperationsServices {
   async delete(){
     const id = this.getVariables().id;
 
-    if (!this.checkData(String(id) || "")) {
+    if (!checkData(String(id) || "")) {
       return {
         status: false,
         message: "Debes especificar correctamente el elemento a eliminar",
@@ -128,9 +129,7 @@ class GenreService extends ResolverOperationsServices {
     };
   }
 
-  private checkData(value: string) {
-    return value === "" || value === undefined ? false : true;
-  }
+  
   private async checkInDatabase(value: string) {
     return await findOneElement(this.collection, this.getDb(), { name: value });
   }
