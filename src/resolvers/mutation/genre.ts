@@ -7,7 +7,7 @@ import GenreService from '../../services/genre.service';
 const resolversGenreMutation: IResolvers = {
   Mutation:{
     addGenre(_, variables, context){
-     return new GenreService(_,variables, context).items();
+     return new GenreService(_,variables, context).insert();
     }
   }
 }

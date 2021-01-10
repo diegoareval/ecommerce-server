@@ -29,16 +29,20 @@ class GenreService extends ResolverOperationsServices{
         }
     }
 
-    // listar informacion
-  
-
-    // detalles de un item especifico
-
-    // agregar item
-
-    // modificar item
-
-    // eliminar item
+   async insert(){
+    const result = await this.add(COLLECTIONS.GENRES, {
+        id: "85",
+        name: "realidad virtual",
+        slug: "realidad-virtual"
+    }, 'genero')
+    // console.log("resultado",result.genre?.item);
+    
+    return {
+       status: result.status,
+       message: result.message,
+       genre: result.item
+    }
+   }
 }
 
 export default GenreService
