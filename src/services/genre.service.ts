@@ -1,7 +1,8 @@
-import { findOneElement } from './../lib/db-operations';
+import { findOneElement, assignDocumentId } from './../lib/db-operations';
 import { COLLECTIONS } from './../config/constants';
 import { IContextData } from './../interfaces/context-data.interface';
 import ResolverOperationsServices from "./resolvers-operations";
+import slugify from 'slugify';
 
 class GenreService extends ResolverOperationsServices{
     collection = COLLECTIONS.GENRES;
@@ -50,16 +51,11 @@ class GenreService extends ResolverOperationsServices{
        }
        // si valida las opciones anterior insertar documento
        const genreObject = {
-           id: '',
-           name: '',
-           slug: ''
+           id: assignDocumentId(this.getDb(), this.collection, {id: -1}),
+           name: genre,
+           slug: slugify(genre || '', {lower: true})
        }
-    const result = await this.add(this.collection, {
-        id: "85",
-        name: genre,
-        slug: "realidad-virtual"
-    }, 'genero')
-    
+    const result = await this.add(this.collection, genreObject, 'genero')
     return {
        status: result.status,
        message: result.message,
