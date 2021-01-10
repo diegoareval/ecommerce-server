@@ -1,8 +1,4 @@
-import { findOneElement, findAllElements } from "./../../lib/db-operations";
-import { COLLECTIONS, MESSAGES, EXPIRETIME } from "./../../config/constants";
 import { IResolvers } from "graphql-tools";
-import JWT from "./../../lib/jwt";
-import PasswordSecurity from "./../../lib/hash";
 import UserService from '../../services/user.service';
 
 const resolversUsersQuery: IResolvers = {

@@ -1,4 +1,4 @@
-import { findOneElement } from './../lib/db-operations';
+import { findOneElement, assignDocumentId } from './../lib/db-operations';
 
 import { COLLECTIONS, EXPIRETIME, MESSAGES } from "./../config/constants";
 import { IContextData } from "./../interfaces/context-data.interface";
@@ -39,6 +39,40 @@ class UserService extends ResolverOperationsServices {
       user: Object.values(info)[0],
     };
   }
+  // registrar usuario
+  async register(){
+      const user = this.getVariables().user
+      // comprobar si usuario es nulo
+      if(user === null){
+        return {
+            status: false,
+            message: "Debes especificar el usuario",
+            user: null,
+          };
+      }
+       // comprobar si usuario existe
+       const checkUser  = await findOneElement(this.collection, this.getDb(), {email: user?.email}) 
+       if(checkUser !== null) {
+         return {
+           status: false,
+           message: MESSAGES.USER_EXIST + user?.email,
+           user: null
+         }
+       }
+         // comprobar el ultimo usuario para obtener el id
+         user!.id = await assignDocumentId(this.getDb(), this.collection)
+         // asignar la fecha
+           user!.registerDate = new Date().toISOString()
+           // encriptar password
+           user!.password = new PasswordSecurity().hash(user!.password)
+         // guardar el documento
+         const result = await this.add(this.collection, user || {}, "usuarios");
+         return {
+            status: result.status,
+            message: result.message,
+            user: result.item,
+          };
+  } 
 
   // login
   async login(){
