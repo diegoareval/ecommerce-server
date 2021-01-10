@@ -1,6 +1,7 @@
 import { IVariables } from "./../interfaces/variable.interface";
 import { IContextData } from "./../interfaces/context-data.interface";
 import { findAllElements, insertOneElement, findOneElement } from "../lib/db-operations";
+import { Db } from "mongodb";
 
 class ResolverOperationsServices {
   private root: object;
@@ -13,6 +14,8 @@ class ResolverOperationsServices {
   }
  
   protected getVariables(): IVariables {return this.variables}
+
+  protected getDb(): Db {return this.context.db}
   // listar informacion
   protected async list(collection: string, listElement: string) {
     try {

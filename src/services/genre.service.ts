@@ -1,9 +1,10 @@
+import { findOneElement } from './../lib/db-operations';
 import { COLLECTIONS } from './../config/constants';
 import { IContextData } from './../interfaces/context-data.interface';
 import ResolverOperationsServices from "./resolvers-operations";
 
 class GenreService extends ResolverOperationsServices{
-
+    collection = COLLECTIONS.GENRES;
     constructor(root: object, variables: object, context: IContextData){
     super(root, variables, context)
     }
@@ -19,7 +20,7 @@ class GenreService extends ResolverOperationsServices{
     }
 
     async detail(){
-        const result = await this.get(COLLECTIONS.GENRES)
+        const result = await this.get(this.collection)
         // console.log("resultado",result.genre?.item);
         
         return {
@@ -40,15 +41,22 @@ class GenreService extends ResolverOperationsServices{
           }
        }
        // comprobar que no existe
+       if(await this.checkInDatabase(genre || '')){
+        return {
+            status: false,
+            message: "El genero especificado ya existe en la base de datos",
+            genre: null
+        }
+       }
        // si valida las opciones anterior insertar documento
        const genreObject = {
            id: '',
            name: '',
            slug: ''
        }
-    const result = await this.add(COLLECTIONS.GENRES, {
+    const result = await this.add(this.collection, {
         id: "85",
-        name: "realidad virtual",
+        name: genre,
         slug: "realidad-virtual"
     }, 'genero')
     
@@ -61,6 +69,9 @@ class GenreService extends ResolverOperationsServices{
 
    private checkData(value: string) {
        return (value === '' || value===undefined)? false : true
+   }
+   private async checkInDatabase(value: string){
+       return await findOneElement(this.collection, this.getDb(), {name: value})
    }
 }
 
