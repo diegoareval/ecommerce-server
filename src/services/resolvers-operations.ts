@@ -91,6 +91,9 @@ class ResolverOperationsServices {
   }
 
   // modificar item
+  protected update(collection: string, filter: object, objectUpdate: object, item: string){
+
+  }
 
   // eliminar item
 }
