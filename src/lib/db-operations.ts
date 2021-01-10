@@ -15,7 +15,8 @@ export const assignDocumentId = async (
   if (lastElement.length === 0) {
     return '1';
   }
-  return String(lastElement[0].id + 1);
+  const id = +lastElement[0].id + 1
+  return String(id);
 };
 
 export const findOneElement = async (collection: string, database: Db, filter: object) =>{
@@ -38,3 +39,10 @@ export const updateOneElement = async(collection: string, database: Db, filter: 
   return await database.collection(collection).updateOne(
     filter, objectUpdate)
 }
+
+export const removeOneElement = async(collection: string, database: Db, filter: object) => {
+  return await database.collection(collection).deleteOne(
+    filter)
+}
+
+

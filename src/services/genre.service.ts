@@ -50,8 +50,11 @@ class GenreService extends ResolverOperationsServices {
       };
     }
     // si valida las opciones anterior insertar documento
+    const id = await assignDocumentId(this.getDb(), this.collection, { id: -1 })
+    console.log(id);
+    
     const genreObject = {
-      id: assignDocumentId(this.getDb(), this.collection, { id: -1 }),
+      id,
       name: genre,
       slug: slugify(genre || "", { lower: true }),
     };
@@ -103,8 +106,26 @@ class GenreService extends ResolverOperationsServices {
     };
   }
 
-  async remove(){
+  async delete(){
+    const id = this.getVariables().id;
 
+    if (!this.checkData(String(id) || "")) {
+      return {
+        status: false,
+        message: "Debes especificar correctamente el elemento a eliminar",
+        genre: null,
+      };
+    }
+    const result = await this.remove(
+      this.collection,
+      { id },
+      "genero"
+    );
+    return {
+      status: result.status,
+      message: result.message,
+      genre: null,
+    };
   }
 
   private checkData(value: string) {

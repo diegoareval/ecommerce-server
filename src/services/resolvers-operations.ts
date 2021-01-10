@@ -1,4 +1,4 @@
-import { updateOneElement } from './../lib/db-operations';
+import { updateOneElement, removeOneElement } from './../lib/db-operations';
 import { IVariables } from "./../interfaces/variable.interface";
 import { IContextData } from "./../interfaces/context-data.interface";
 import { findAllElements, insertOneElement, findOneElement } from "../lib/db-operations";
@@ -68,7 +68,7 @@ class ResolverOperationsServices {
   // agregar item
   protected async add(collection: string, document: object, item: string) {
     try {
-       return await insertOneElement(collection, this.context.db, document).then((res)=>{
+       return await insertOneElement(collection, this.getDb(), document).then((res)=>{
          if(res.result.ok === 1){
           return {
             status: true,
@@ -94,7 +94,7 @@ class ResolverOperationsServices {
   // modificar item
   protected async update(collection: string, filter: object, objectUpdate: object, item: string){
        try{
-        return await updateOneElement(collection, this.context.db, filter, {
+        return await updateOneElement(collection, this.getDb(), filter, {
           $set:objectUpdate
         }).then((res)=>{
           if(res.result.nModified === 1 && res.result.ok ){
@@ -121,7 +121,25 @@ class ResolverOperationsServices {
 
   // eliminar item
   protected async remove(collection: string, filter: object, item: string) {
-
+       try{
+         return await removeOneElement(collection, this.getDb(), filter).then((res) =>{
+           if(res.deletedCount === 1){
+              return{
+                status: true,
+                message: `se eliminado correctamente el ${item}`
+              }
+           }
+           return {
+            status: false,
+            message: `No se ha eliminado el ${item}`,
+          };
+         })
+       }catch(error){
+        return {
+          status: false,
+          message: `error inesperado al eliminar el ${item}`
+        };
+       }
   }
 }
 
