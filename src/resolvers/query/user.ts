@@ -3,25 +3,12 @@ import { COLLECTIONS, MESSAGES, EXPIRETIME } from "./../../config/constants";
 import { IResolvers } from "graphql-tools";
 import JWT from "./../../lib/jwt";
 import PasswordSecurity from "./../../lib/hash";
+import UserService from '../../services/user.service';
 
 const resolversUsersQuery: IResolvers = {
   Query: {
-    async users(_, __, { db }) {
-      try {
-        // obtener la lista de todos los usuarios
-        return {
-          status: true,
-          message: MESSAGES.LOAD_USERS_SUCCESS,
-          users: await findAllElements(COLLECTIONS.USERS, db),
-        };
-      } catch (err) {
-        console.log(err);
-        return {
-          status: false,
-          message: MESSAGES.LOAD_USERS_ERROR,
-          users: [],
-        };
-      }
+    async users(_, __, context) {
+      return new UserService(_, __, context).items();
     },
     async login(_, { email, password }, { db }) {
       try {
