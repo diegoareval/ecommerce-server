@@ -1,4 +1,5 @@
 type ResultGenre implements Result{
+info: ResultInfo
 status: Boolean!
 message: String!
 genre: Genre
