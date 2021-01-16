@@ -76,6 +76,7 @@ class UserService extends ResolverOperationsServices {
   } 
 
   // update 
+  // Modificar un usuario
   async modify() {
     const user = this.getVariables().user;
     // comprobar que user no es null

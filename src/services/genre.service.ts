@@ -80,6 +80,8 @@ class GenreService extends ResolverOperationsServices {
       };
     }
 
+    
+
     if (!checkData(genre || "")) {
       return {
         status: false,
