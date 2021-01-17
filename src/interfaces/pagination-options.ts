@@ -3,5 +3,6 @@ pagination: number;
 skip: number;
 total: number,
 itemsPage: number;
-pages: number;
+page: number;
+pages: number
 }

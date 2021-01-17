@@ -3,6 +3,7 @@ import { IVariables } from "./../interfaces/variable.interface";
 import { IContextData } from "./../interfaces/context-data.interface";
 import { findAllElements, insertOneElement, findOneElement } from "../lib/db-operations";
 import { Db } from "mongodb";
+import { pagination } from '../lib/pagination';
 
 class ResolverOperationsServices {
   private root: object;
@@ -19,8 +20,11 @@ class ResolverOperationsServices {
   protected getDb(): Db {return this.context.db!}
   protected getToken(): string {return this.context.token!}
   // listar informacion
-  protected async list(collection: string, listElement: string) {
+  protected async list(collection: string, listElement: string, page: number = 1, itemsPage: number = 20) {
     try {
+      const paginationData = await  pagination(this.getDb(), collection, page, itemsPage);
+      console.log(paginationData);
+      
       return {
         status: true,
         message: `Lista de ${listElement} cargada correctamente`,

@@ -13,7 +13,10 @@ class GenreService extends ResolverOperationsServices {
 
   // obteniendo todos los generos y retornando en el formato correcto
   async items() {
-    const result = await this.list(COLLECTIONS.GENRES, "generos");
+    const page = this.getVariables().pagination?.page;
+    const itemsPage = this.getVariables().pagination?.itemsPage;
+
+    const result = await this.list(COLLECTIONS.GENRES, "generos", page, itemsPage);
     return {
       status: result.status,
       message: result.message,
