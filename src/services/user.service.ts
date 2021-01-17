@@ -1,12 +1,11 @@
-import { checkData } from './../lib/utils';
-import { findOneElement, assignDocumentId } from './../lib/db-operations';
+import { checkData } from "./../lib/utils";
+import { findOneElement, assignDocumentId } from "./../lib/db-operations";
 
 import { COLLECTIONS, EXPIRETIME, MESSAGES } from "./../config/constants";
 import { IContextData } from "./../interfaces/context-data.interface";
 import ResolverOperationsServices from "./resolvers-operations";
-import PasswordSecurity from '../lib/hash';
-import JWT from '../lib/jwt';
-
+import PasswordSecurity from "../lib/hash";
+import JWT from "../lib/jwt";
 
 class UserService extends ResolverOperationsServices {
   private collection = COLLECTIONS.USERS;
@@ -18,7 +17,12 @@ class UserService extends ResolverOperationsServices {
   async items() {
     const page = this.getVariables().pagination?.page;
     const itemsPage = this.getVariables().pagination?.itemsPage;
-    const result = await this.list(this.collection, "Usuarios", page, itemsPage);
+    const result = await this.list(
+      this.collection,
+      "Usuarios",
+      page,
+      itemsPage
+    );
     return {
       info: result.info,
       status: result.status,
@@ -28,7 +32,7 @@ class UserService extends ResolverOperationsServices {
   }
 
   // autenticarnos
-  async auth(){
+  async auth() {
     let info = new JWT().verify(this.getToken());
     if (info === MESSAGES.TOKEN_VERIFY_FAILED) {
       return {
@@ -44,41 +48,43 @@ class UserService extends ResolverOperationsServices {
     };
   }
   // registrar usuario
-  async register(){
-      const user = this.getVariables().user
-      // comprobar si usuario es nulo
-      if(user === null){
-        return {
-            status: false,
-            message: "Debes especificar el usuario",
-            user: null,
-          };
-      }
-       // comprobar si usuario existe
-       const checkUser  = await findOneElement(this.collection, this.getDb(), {email: user?.email}) 
-       if(checkUser !== null) {
-         return {
-           status: false,
-           message: MESSAGES.USER_EXIST + user?.email,
-           user: null
-         }
-       }
-         // comprobar el ultimo usuario para obtener el id
-         user!.id = await assignDocumentId(this.getDb(), this.collection)
-         // asignar la fecha
-           user!.registerDate = new Date().toISOString()
-           // encriptar password
-           user!.password = new PasswordSecurity().hash(user!.password)
-         // guardar el documento
-         const result = await this.add(this.collection, user || {}, "usuarios");
-         return {
-            status: result.status,
-            message: result.message,
-            user: result.item,
-          };
-  } 
+  async register() {
+    const user = this.getVariables().user;
+    // comprobar si usuario es nulo
+    if (user === null) {
+      return {
+        status: false,
+        message: "Debes especificar el usuario",
+        user: null,
+      };
+    }
+    // comprobar si usuario existe
+    const checkUser = await findOneElement(this.collection, this.getDb(), {
+      email: user?.email,
+    });
+    if (checkUser !== null) {
+      return {
+        status: false,
+        message: MESSAGES.USER_EXIST + user?.email,
+        user: null,
+      };
+    }
+    // comprobar el ultimo usuario para obtener el id
+    user!.id = await assignDocumentId(this.getDb(), this.collection);
+    // asignar la fecha
+    user!.registerDate = new Date().toISOString();
+    // encriptar password
+    user!.password = new PasswordSecurity().hash(user!.password);
+    // guardar el documento
+    const result = await this.add(this.collection, user || {}, "usuarios");
+    return {
+      status: result.status,
+      message: result.message,
+      user: result.item,
+    };
+  }
 
-  // update 
+  // update
   // Modificar un usuario
   async modify() {
     const user = this.getVariables().user;
@@ -86,7 +92,7 @@ class UserService extends ResolverOperationsServices {
     if (user === null) {
       return {
         status: false,
-        message: 'Usuario no definido, procura definirlo',
+        message: "Usuario no definido, procura definirlo",
         user: null,
       };
     }
@@ -95,7 +101,7 @@ class UserService extends ResolverOperationsServices {
       this.collection,
       filter,
       user || {},
-      'usuario'
+      "usuario"
     );
     return {
       status: result.status,
@@ -105,7 +111,7 @@ class UserService extends ResolverOperationsServices {
   }
 
   // eliminar
-  async delete(){
+  async delete() {
     const id = this.getVariables().id;
 
     if (!checkData(String(id) || "")) {
@@ -115,11 +121,7 @@ class UserService extends ResolverOperationsServices {
         genre: null,
       };
     }
-    const result = await this.remove(
-      this.collection,
-      { id },
-      "usuarios"
-    );
+    const result = await this.remove(this.collection, { id }, "usuarios");
     return {
       status: result.status,
       message: result.message,
@@ -128,51 +130,48 @@ class UserService extends ResolverOperationsServices {
   }
 
   // login
-  async login(){
-      const variables = this.getVariables().user
+  async login() {
+    const variables = this.getVariables().user;
     try {
-        const user = await findOneElement(this.collection, this.getDb(), { email: variables?.email });
-        if (user === null) {
-          return {
-            status: false,
-            message: MESSAGES.USER_NOT_FOUND,
-            token: null,
-          };
-        }
-        // obtener el usuario
-        const passwordCheck = new PasswordSecurity().compareHashedPassword(
-          variables?.password || '',
-          user.password
-        );
-        const message = !passwordCheck
-          ? MESSAGES.LOGIN_ERROR
-          : MESSAGES.LOGIN_SUCCESS;
-
-        if (passwordCheck !== null) {
-          delete user.password;
-          delete user.registerDate;
-          delete user.birthdate;
-        }
-        return {
-          user: !passwordCheck? null: user,
-          status: passwordCheck,
-          message,
-          token: !passwordCheck
-            ? null
-            : new JWT().sign({ user }, EXPIRETIME.H24),
-        };
-      } catch (err) {
-        console.log(err);
+      const user = await findOneElement(this.collection, this.getDb(), {
+        email: variables?.email,
+      });
+      if (user === null) {
         return {
           status: false,
-          message: MESSAGES.LOGIN_ERROR,
+          message: MESSAGES.USER_NOT_FOUND,
           token: null,
         };
       }
+      // obtener el usuario
+      const passwordCheck = new PasswordSecurity().compareHashedPassword(
+        variables?.password || "",
+        user.password
+      );
+      const message = !passwordCheck
+        ? MESSAGES.LOGIN_ERROR
+        : MESSAGES.LOGIN_SUCCESS;
+
+      if (passwordCheck !== null) {
+        delete user.password;
+        delete user.registerDate;
+        delete user.birthdate;
+      }
+      return {
+        user: !passwordCheck ? null : user,
+        status: passwordCheck,
+        message,
+        token: !passwordCheck ? null : new JWT().sign({ user }, EXPIRETIME.H24),
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        status: false,
+        message: MESSAGES.LOGIN_ERROR,
+        token: null,
+      };
+    }
   }
-
-
-
 }
 
 export default UserService;
