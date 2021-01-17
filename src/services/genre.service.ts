@@ -18,6 +18,7 @@ class GenreService extends ResolverOperationsServices {
 
     const result = await this.list(COLLECTIONS.GENRES, "generos", page, itemsPage);
     return {
+      info: result.info,
       status: result.status,
       message: result.message,
       genres: result.items,

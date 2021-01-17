@@ -22,16 +22,21 @@ class ResolverOperationsServices {
   // listar informacion
   protected async list(collection: string, listElement: string, page: number = 1, itemsPage: number = 20) {
     try {
-      const paginationData = await  pagination(this.getDb(), collection, page, itemsPage);
-      console.log(paginationData);
-      
+      const paginationData = await  pagination(this.getDb(), collection, page, itemsPage);      
       return {
+        info: {
+          page: paginationData.page,
+          pages: paginationData.pages,
+          itemsPage: paginationData.itemsPage,
+          total: paginationData.total
+        },
         status: true,
         message: `Lista de ${listElement} cargada correctamente`,
-        items: await findAllElements(collection, this.getDb()),
+        items: await findAllElements(collection, this.getDb(), {}, paginationData),
       };
     } catch (error) {
       return {
+        info: null,
         status: false,
         message: `La lista de ${listElement} no se pudo cargar: ${error}`,
         items: null,
