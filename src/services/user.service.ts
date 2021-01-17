@@ -16,8 +16,11 @@ class UserService extends ResolverOperationsServices {
 
   // obteniendo todos los generos y retornando en el formato correcto
   async items() {
-    const result = await this.list(this.collection, "Usuarios");
+    const page = this.getVariables().pagination?.page;
+    const itemsPage = this.getVariables().pagination?.itemsPage;
+    const result = await this.list(this.collection, "Usuarios", page, itemsPage);
     return {
+      info: result.info,
       status: result.status,
       message: result.message,
       users: result.items,

@@ -1,6 +1,6 @@
 "Definicion de esquema"
 type Query{
-    users: ResultUsers,
+    users(page: Int = 1, itemsPage: Int = 20): ResultUsers,
     login(email: String!, password: String!): ResultLogin
     "AUTENTICACION CON TOKEN"
     me: ResultUserRegister
