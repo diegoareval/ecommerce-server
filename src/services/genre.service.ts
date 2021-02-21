@@ -135,6 +135,22 @@ class GenreService extends ResolverOperationsServices {
     };
   }
 
+  async block(){
+    const id = this.getVariables().id;
+    if (!checkData(String(id) || "")) {
+      return {
+        status: false,
+        message: "Debes especificar correctamente el elemento a eliminar",
+        genre: null,
+      };
+    }
+    const result = await this.update(this.collection, {id}, {active: false}, "género");
+        return {
+          status: result.status,
+          message: (result.status)? "Bloqueado correctamente": "No se ha bloqueado",
+        }
+  }
+
   
   private async checkInDatabase(value: string) {
     return await findOneElement(this.collection, this.getDb(), { name: value });
