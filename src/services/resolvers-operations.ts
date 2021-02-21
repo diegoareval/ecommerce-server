@@ -20,9 +20,9 @@ class ResolverOperationsServices {
   protected getDb(): Db {return this.context.db!}
   protected getToken(): string {return this.context.token!}
   // listar informacion
-  protected async list(collection: string, listElement: string, page: number = 1, itemsPage: number = 20) {
+  protected async list(collection: string, listElement: string, page: number = 1, itemsPage: number = 20, filter: object = {active: {$ne: false}}) {
     try {
-      const paginationData = await  pagination(this.getDb(), collection, page, itemsPage);      
+      const paginationData = await  pagination(this.getDb(), collection, page, itemsPage, filter);      
       return {
         info: {
           page: paginationData.page,
@@ -32,7 +32,7 @@ class ResolverOperationsServices {
         },
         status: true,
         message: `Lista de ${listElement} cargada correctamente`,
-        items: await findAllElements(collection, this.getDb(), {}, paginationData),
+        items: await findAllElements(collection, this.getDb(), filter, paginationData),
       };
     } catch (error) {
       return {
