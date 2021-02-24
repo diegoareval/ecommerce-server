@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import nodemailer from "nodemailer";
 
 export const transport = nodemailer.createTransport({
@@ -11,7 +12,13 @@ export const transport = nodemailer.createTransport({
 })
 
 transport.verify().then(()=>{
-    console.log("verificacion correcta");
+    console.log("+++++mail configs++++++++++++++")
+    console.log("+++++conected++++++++++++++")
+      console.log(`Status: ${chalk.greenBright("ONLINE")}`);
+      console.log("+++++conected++++++++++++++")
 }).catch(()=>{
-    console.log("verificacion incorrecta");
+    console.log("+++++ not conected++++++++++++++")
+      console.log(`Status: ${chalk.redBright("OFFLINE")}`);
+      console.log("+++++ not conected++++++++++++++")
+
 });

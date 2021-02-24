@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import { IContext } from "../interfaces/context.interface";
 import express from "express";
 import cors from "cors";
@@ -43,7 +44,12 @@ export default class App {
       {
         port: PORT,
       },
-      () => console.log("running on port: " + PORT)
+      () => 
+      {
+        console.log("+++++conected++++++++++++++")
+      console.log(`Status: ${chalk.greenBright("online on ")} ${PORT}`);
+      console.log("+++++conected++++++++++++++")
+      }
     );
   }
 }
