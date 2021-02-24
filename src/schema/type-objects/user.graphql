@@ -8,6 +8,7 @@ type User{
     email: String!
     password: String!
     registerDate: String!
-    birthdate: String!,
+    birthdate: String!
     role: Role!
+    active: Boolean
 }

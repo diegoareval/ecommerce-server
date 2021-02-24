@@ -14,4 +14,5 @@ input UserInput {
     birthdate: String!
     "Permisos del usuario"
     role: Role=CLIENT
+    active: Boolean
 }
