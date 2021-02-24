@@ -12,6 +12,9 @@ const resolversUsersMutation: IResolvers = {
     },
     updateUser(_, variables, context){
       return new UserService(_, variables, context).modify()
+    },
+    blockUser(_, variables, context){
+      return new UserService(_, variables, context).block()
     }
   }
 }

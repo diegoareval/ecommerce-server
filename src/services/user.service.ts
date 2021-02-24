@@ -172,6 +172,22 @@ class UserService extends ResolverOperationsServices {
       };
     }
   }
+  // block user
+  async block(){
+    const id = this.getVariables().id;
+    if (!checkData(String(id) || "")) {
+      return {
+        status: false,
+        message: "Debes especificar correctamente el elemento a bloquear",
+        user: null,
+      };
+    }
+    const result = await this.update(this.collection, {id}, {active: false}, "usuario");
+        return {
+          status: result.status,
+          message: (result.status)? "Bloqueado correctamente": "No se ha bloqueado",
+        }
+  }
 }
 
 export default UserService;

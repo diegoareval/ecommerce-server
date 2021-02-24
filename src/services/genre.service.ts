@@ -140,7 +140,7 @@ class GenreService extends ResolverOperationsServices {
     if (!checkData(String(id) || "")) {
       return {
         status: false,
-        message: "Debes especificar correctamente el elemento a eliminar",
+        message: "Debes especificar correctamente el elemento a bloquear",
         genre: null,
       };
     }
