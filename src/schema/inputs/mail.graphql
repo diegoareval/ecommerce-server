@@ -1,0 +1,6 @@
+input MailInput{
+    from: String
+    to: String!
+    subject: String!
+    html: String!
+}

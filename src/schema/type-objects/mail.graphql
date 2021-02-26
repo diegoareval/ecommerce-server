@@ -1,0 +1,6 @@
+type Mail{
+    from: String
+    to: String!
+    subject: String!
+    html: String!
+}
