@@ -14,7 +14,7 @@ const resolversUsersMutation: IResolvers = {
       return new UserService(_, variables, context).modify()
     },
     blockUser(_, variables, context){
-      return new UserService(_, variables, context).block()
+      return new UserService(_, variables, context).unblock(false)
     }
   }
 }

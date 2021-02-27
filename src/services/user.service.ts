@@ -173,7 +173,7 @@ class UserService extends ResolverOperationsServices {
     }
   }
   // block user
-  async block(){
+  async unblock(unblock: boolean = false){
     const id = this.getVariables().id;
     if (!checkData(String(id) || "")) {
       return {
@@ -182,10 +182,11 @@ class UserService extends ResolverOperationsServices {
         user: null,
       };
     }
-    const result = await this.update(this.collection, {id}, {active: false}, "usuario");
+    const result = await this.update(this.collection, {id}, {active: unblock}, "usuario");
+    const action = (unblock)? 'Desbloqueado': 'Bloqueado';
         return {
           status: result.status,
-          message: (result.status)? "Bloqueado correctamente": "No se ha bloqueado",
+          message: (result.status)? `${action} correctamente`: `No se ha ${action}`,
         }
   }
 }
