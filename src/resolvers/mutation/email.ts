@@ -1,4 +1,4 @@
-import { EXPIRETIME } from './../../config/constants';
+import { EXPIRETIME, MESSAGES } from './../../config/constants';
 import { IResolvers } from "graphql-tools";
 import { transport } from "../../config/mailer";
 import JWT from "../../lib/jwt";
@@ -31,6 +31,8 @@ const resolversEmailMutation: IResolvers = {
       return new Promise((resolve, reject) => {
         // send mail with defined transport object
         const token = new JWT().sign({user: {id, email}}, EXPIRETIME.H1);
+        console.log(token);
+        
         const html = `Para activar la cuenta haz sobre esto: <a href="${process.env.CLIENT_URL}/#/active/${token}"> Click aqui</a>`
         transport.sendMail({
           from: '"Ecommerce 👻" <diego2000avelar@gmail.com>', // sender address
@@ -48,6 +50,24 @@ const resolversEmailMutation: IResolvers = {
             })
         });
       });
+    },
+    activeUserAction(_, {id,birthdate, password}, {token, db}){
+       // verify token
+       const checkToken = new JWT().verify(token);
+       if (checkToken === MESSAGES.TOKEN_VERIFY_FAILED) {
+        return {
+          status: false,
+          message: "El periodo para activar el usuario ha finalizado",
+          user: null,
+        };
+      }
+      // si el token es valido
+      const user = Object.values(checkToken)[0];
+      console.log(user, {id,birthdate, password});
+      return {
+        status: true,
+        message: "Preparado para activar el usuario"
+      }
     }
   },
 };
