@@ -1,9 +1,10 @@
-import { findOneElement } from "./../../lib/db-operations";
+import { findOneElement, updateOneElement } from "./../../lib/db-operations";
 import { EXPIRETIME, MESSAGES, COLLECTIONS } from "./../../config/constants";
 import { IResolvers } from "graphql-tools";
 import { transport } from "../../config/mailer";
 import JWT from "../../lib/jwt";
 import UserService from "../../services/user.service";
+import PasswordSecurity from "../../lib/hash";
 
 // mutation para registrar usuario
 const resolversEmailMutation: IResolvers = {
@@ -37,7 +38,7 @@ const resolversEmailMutation: IResolvers = {
     async activeUserEmail(_, { id, email }) {
       const token = new JWT().sign({ user: { id, email } }, EXPIRETIME.H1);
       console.log(token);
-      
+
       const html = `Para activar la cuenta haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/active/${token}"> Click aqui</a>`;
       return new Promise((resolve, reject) => {
         // send mail with defined transport object
@@ -131,13 +132,35 @@ const resolversEmailMutation: IResolvers = {
           message: verify.message,
         };
       }
-      // check correct id
-      // encrypt password
-      // update the correct user
-      return{
-        status: true,
-        message: "correcto"
+      // check correct id and password
+      if (id === undefined || id === "") {
+        return { status: false, message: "debes especificar un id" };
       }
+      if (password === undefined || password === "") {
+        return { status: false, message: "debes especificar un password" };
+      }
+      // encrypt password
+      password = new PasswordSecurity().hash(password);
+      // update the correct user
+      return await updateOneElement(COLLECTIONS.USERS, db, { id }, {$set: { password }})
+        .then((res) => {
+          if (res.result.nModified === 1 && res.result.ok) {
+            return {
+              status: true,
+              message: "contraseña cambiada correctamente",
+            };
+          }
+          return {
+            status: false,
+            message: "no se pudo cambiar la contraseña",
+          };
+        })
+        .catch((err) => {
+          return {
+            status: false,
+            message: "ocurrio un error: " + err,
+          };
+        });
     },
   },
 };

@@ -194,8 +194,7 @@ class UserService extends ResolverOperationsServices {
     if(unblock){
         update = Object.assign({}, {active: true}, {birthdate: user?.birthdate, password: new PasswordSecurity().hash(user?.password || "")})
     }
-    console.log(update);
-    
+
     const result = await this.update(this.collection, {id}, update, "usuario");
     const action = (unblock)? 'Desbloqueado': 'Bloqueado';
         return {
