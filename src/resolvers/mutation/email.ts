@@ -39,7 +39,7 @@ const resolversEmailMutation: IResolvers = {
       const html = `Para activar la cuenta haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/active/${token}"> Click aqui</a>`;
       return new Promise((resolve, reject) => {
         // send mail with defined transport object
-      
+
         transport.sendMail(
           {
             from: '"Ecommerce 👻" <diego2000avelar@gmail.com>', // sender address
@@ -63,25 +63,14 @@ const resolversEmailMutation: IResolvers = {
       });
     },
     async activeUserAction(_, { id, birthdate, password }, { token, db }) {
-      // verify token
-      const checkToken = new JWT().verify(token);
-      if (checkToken === MESSAGES.TOKEN_VERIFY_FAILED) {
+      const verify = verifyToken(token, id);
+      if (verify?.status === false) {
         return {
-          status: false,
-          message: "El periodo para activar el usuario ha finalizado",
-          user: null,
+          status: verify.status,
+          message: verify.message,
         };
       }
-      // si el token es valido
-      const user = Object.values(checkToken)[0];
-      console.log(user, { id, birthdate, password });
-      if (user.id !== id) {
-        return {
-          status: false,
-          message: "El token no corresponde al usuario",
-          user: null,
-        };
-      }
+
       return new UserService(
         _,
         { id, user: { birthdate, password } },
@@ -91,7 +80,7 @@ const resolversEmailMutation: IResolvers = {
     async resetPassword(_, { email }, { db }) {
       // get user info
       const user = await findOneElement(COLLECTIONS.USERS, db, { email });
-      if(!user){
+      if (!user) {
         return {
           status: false,
           message: `el usuario co el ${email} no existe`,
@@ -100,15 +89,15 @@ const resolversEmailMutation: IResolvers = {
       }
       const newUser = {
         id: user.id,
-        email
-      }
-      const token = new JWT().sign({user: newUser}, EXPIRETIME.M15);
+        email,
+      };
+      const token = new JWT().sign({ user: newUser }, EXPIRETIME.M15);
       console.log(token);
-      
+
       const html = `Para cambiar la contraseña haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/reset/${token}"> Click aqui</a>`;
       return new Promise((resolve, reject) => {
         // send mail with defined transport object
-      
+
         transport.sendMail(
           {
             from: '"Ecommerce 👻" <diego2000avelar@gmail.com>', // sender address
@@ -130,9 +119,46 @@ const resolversEmailMutation: IResolvers = {
           }
         );
       });
-      
+    },
+    async changePassword(_, { id, password }, { db, token }) {
+      //check token
+      const verify = verifyToken(token, id);
+      if (verify?.status === false) {
+        return {
+          status: verify.status,
+          message: verify.message,
+        };
+      }
+      // check correct id
+      // encrypt password
+      // update the correct user
+      return{
+        status: true,
+        message: "correcto"
+      }
     },
   },
 };
+
+function verifyToken(token: string, id: string) {
+  // verify token
+  const checkToken = new JWT().verify(token);
+  if (checkToken === MESSAGES.TOKEN_VERIFY_FAILED) {
+    return {
+      status: false,
+      message: "El periodo para activar el usuario ha finalizado",
+      user: null,
+    };
+  }
+  // si el token es valido
+  const user = Object.values(checkToken)[0];
+  if (user.id !== id) {
+    return {
+      status: false,
+      message: "El token no corresponde al usuario",
+      user: null,
+    };
+  }
+}
 
 export default resolversEmailMutation;

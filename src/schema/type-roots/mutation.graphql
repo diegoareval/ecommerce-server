@@ -4,6 +4,7 @@ type Mutation{
     deleteUser(id: ID!): ResultUserRegister
     blockUser(id: ID!): ResultUserRegister
     updateUser(user: UserInput!): ResultUserRegister
+    changePassword(id: ID!, password: String!):ResultUserRegister
     sendEmail(mail: MailInput!): ResultMail
     activeUserEmail(id: ID!, email: String!): ResultMail
     activeUserAction(id: ID!,birthdate: String!, password: String!): ResultMail
