@@ -36,6 +36,8 @@ const resolversEmailMutation: IResolvers = {
     },
     async activeUserEmail(_, { id, email }) {
       const token = new JWT().sign({ user: { id, email } }, EXPIRETIME.H1);
+      console.log(token);
+      
       const html = `Para activar la cuenta haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/active/${token}"> Click aqui</a>`;
       return new Promise((resolve, reject) => {
         // send mail with defined transport object
