@@ -74,7 +74,7 @@ class UserService extends ResolverOperationsServices {
     // asignar la fecha
     user!.registerDate = new Date().toISOString();
     // encriptar password
-    user!.password = new PasswordSecurity().hash(user!.password);
+    user!.password = new PasswordSecurity().hash(user?.password || "");
     // guardar el documento
     const result = await this.add(this.collection, user || {}, "usuarios");
     return {
