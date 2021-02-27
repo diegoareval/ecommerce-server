@@ -65,7 +65,14 @@ const resolversEmailMutation: IResolvers = {
       // si el token es valido
       const user = Object.values(checkToken)[0];
       console.log(user, {id,birthdate, password});
-      return new UserService(_,{id,birthdate, password}, {token, db}).unblock(true);
+      if(user.id !==id){
+        return {
+          status: false,
+          message: "El token no corresponde al usuario",
+          user: null,
+        };
+      }
+      return new UserService(_,{id,user:{birthdate, password}}, {token, db}).unblock(true);
       /*return {
         status: true,
         message: "Preparado para activar el usuario"

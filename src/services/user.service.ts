@@ -175,6 +175,7 @@ class UserService extends ResolverOperationsServices {
   // block user
   async unblock(unblock: boolean = false){
     const id = this.getVariables().id;
+    const user = this.getVariables().user;
     if (!checkData(String(id) || "")) {
       return {
         status: false,
@@ -182,7 +183,20 @@ class UserService extends ResolverOperationsServices {
         user: null,
       };
     }
-    const result = await this.update(this.collection, {id}, {active: unblock}, "usuario");
+    if(user?.password==="1234"){
+      return {
+        status: false,
+        message: "Debes cambiar el password",
+        user: null,
+      };
+    }
+    let update = {active: unblock};
+    if(unblock){
+        update = Object.assign({}, {active: true}, {birthdate: user?.birthdate, password: new PasswordSecurity().hash(user?.password || "")})
+    }
+    console.log(update);
+    
+    const result = await this.update(this.collection, {id}, update, "usuario");
     const action = (unblock)? 'Desbloqueado': 'Bloqueado';
         return {
           status: result.status,
