@@ -47,39 +47,7 @@ const resolversEmailMutation: IResolvers = {
         };
       }
       // check correct id and password
-      if (id === undefined || id === "") {
-        return { status: false, message: "debes especificar un id" };
-      }
-      if (password === undefined || password === "") {
-        return { status: false, message: "debes especificar un password" };
-      }
-      // encrypt password
-      password = new PasswordSecurity().hash(password);
-      // update the correct user
-      return await updateOneElement(
-        COLLECTIONS.USERS,
-        db,
-        { id },
-        { $set: { password } }
-      )
-        .then((res) => {
-          if (res.result.nModified === 1 && res.result.ok) {
-            return {
-              status: true,
-              message: "contraseña cambiada correctamente",
-            };
-          }
-          return {
-            status: false,
-            message: "no se pudo cambiar la contraseña",
-          };
-        })
-        .catch((err) => {
-          return {
-            status: false,
-            message: "ocurrio un error: " + err,
-          };
-        });
+     return new PasswordService(_, {user: {id, password}}, {db}).change();
     },
   },
 };

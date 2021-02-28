@@ -5,6 +5,7 @@ import { IContextData } from "./../interfaces/context-data.interface";
 import MailService from "./mail.service";
 import ResolverOperationsServices from "./resolvers-operations.service";
 import JWT from "../lib/jwt";
+import PasswordSecurity from "../lib/hash";
 
 class PasswordService extends ResolverOperationsServices {
   constructor(root: object, variables: object, context: IContextData) {
@@ -43,6 +44,32 @@ class PasswordService extends ResolverOperationsServices {
       html, // html body
     };
     return new MailService().send(mail);
+  }
+
+  async change() {
+    const id = this.getVariables().user?.id;
+    let password = this.getVariables().user?.password;
+    if (id === undefined || id === "") {
+      return { status: false, message: "debes especificar un id" };
+    }
+    if (password === undefined || password === "" || password === "1234") {
+      return { status: false, message: "debes especificar un password" };
+    }
+    // encrypt password
+    password = new PasswordSecurity().hash(password);
+    // update the correct user
+    const result = await this.update(
+      COLLECTIONS.USERS,
+      { id },
+      { password },
+      "User"
+    );
+    return {
+      status: result.status,
+      message: result.status
+        ? "Contraseña cambiada correctamente"
+        : "No se pudo cambiar la contraseña",
+    };
   }
 }
 
