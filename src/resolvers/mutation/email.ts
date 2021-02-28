@@ -14,14 +14,7 @@ const resolversEmailMutation: IResolvers = {
       return new MailService().send(mail);
     },
     async activeUserEmail(_, { id, email }) {
-      const token = new JWT().sign({ user: { id, email } }, EXPIRETIME.H1);
-      const html = `Para activar la cuenta haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/active/${token}"> Click aqui</a>`;
-      const mail: IMailOptions = {
-        html,
-        to: email,
-        subject: "Activar Usuario",
-      };
-      return new MailService().send(mail);
+      return new  UserService(_, {user:{ id, email}}, {}).active()
     },
     async activeUserAction(_, { id, birthdate, password }, { token, db }) {
       const verify = verifyToken(token, id);

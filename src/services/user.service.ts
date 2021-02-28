@@ -1,3 +1,4 @@
+import { IMailOptions } from './../interfaces/email.interface';
 import { checkData } from "./../lib/utils";
 import { findOneElement, assignDocumentId } from "./../lib/db-operations";
 
@@ -6,6 +7,7 @@ import { IContextData } from "./../interfaces/context-data.interface";
 import ResolverOperationsServices from "./resolvers-operations";
 import PasswordSecurity from "../lib/hash";
 import JWT from "../lib/jwt";
+import MailService from './mail.service';
 
 class UserService extends ResolverOperationsServices {
   private collection = COLLECTIONS.USERS;
@@ -172,6 +174,26 @@ class UserService extends ResolverOperationsServices {
       };
     }
   }
+  //active
+   async active(){
+     const id = this.getVariables().user?.id;
+     const email = this.getVariables().user?.email || "";
+     if(email===undefined || email===''){
+      return {
+        status: false,
+        message: "Debes especificar un email",
+        user: null,
+      };
+     }
+    const token = new JWT().sign({ user: { id, email  } }, EXPIRETIME.H1);
+    const html = `Para activar la cuenta haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/active/${token}"> Click aqui</a>`;
+    const mail: IMailOptions = {
+      html,
+      to: email,
+      subject: "Activar Usuario",
+    };
+    return new MailService().send(mail);
+   }
   // block user
   async unblock(unblock: boolean = false){
     const id = this.getVariables().id;
