@@ -6,4 +6,5 @@ export interface IVariables {
     genre?: string;
     user?: IUser;
     pagination?: IPaginationOptions;
+    tag?: string;
 }

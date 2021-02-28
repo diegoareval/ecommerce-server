@@ -6,4 +6,7 @@ type Query{
     me: ResultUserRegister
     genres(page: Int = 1, itemsPage: Int = 20): ResultGenre,
     genre(id: ID!): ResultGenre
+    tags (page: Int = 1, itemsPage: Int = 20): ResultTag
+    "Item del género seleccionado"
+    tag(id: ID!): ResultTag
 }

@@ -13,4 +13,9 @@ type Mutation{
     updateGenre(id: ID!, genre: String!): ResultGenre
     deleteGenre(id: ID!): ResultGenre
     blockGenre(id: ID!): ResultGenre
+    "Apartado de operaciones donde trabajamos con los tags"
+    addTag(tag: String!): ResultTag
+    updateTag(id: ID!, tag: String!): ResultTag
+    deleteTag(id: ID!): ResultTag
+    blockTag(id: ID!): ResultTag
 }
