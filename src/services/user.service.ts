@@ -4,7 +4,7 @@ import { findOneElement, assignDocumentId } from "./../lib/db-operations";
 
 import { COLLECTIONS, EXPIRETIME, MESSAGES } from "./../config/constants";
 import { IContextData } from "./../interfaces/context-data.interface";
-import ResolverOperationsServices from "./resolvers-operations";
+import ResolverOperationsServices from "./resolvers-operations.service";
 import PasswordSecurity from "../lib/hash";
 import JWT from "../lib/jwt";
 import MailService from './mail.service';

@@ -2,7 +2,7 @@ import { checkData } from './../lib/utils';
 import { findOneElement, assignDocumentId } from "./../lib/db-operations";
 import { COLLECTIONS } from "./../config/constants";
 import { IContextData } from "./../interfaces/context-data.interface";
-import ResolverOperationsServices from "./resolvers-operations";
+import ResolverOperationsServices from "./resolvers-operations.service";
 import slugify from "slugify";
 
 class GenreService extends ResolverOperationsServices {

@@ -1,6 +1,6 @@
-import { updateOneElement, removeOneElement } from './../lib/db-operations';
-import { IVariables } from "./../interfaces/variable.interface";
-import { IContextData } from "./../interfaces/context-data.interface";
+import { updateOneElement, removeOneElement } from '../lib/db-operations';
+import { IVariables } from "../interfaces/variable.interface";
+import { IContextData } from "../interfaces/context-data.interface";
 import { findAllElements, insertOneElement, findOneElement } from "../lib/db-operations";
 import { Db } from "mongodb";
 import { pagination } from '../lib/pagination';
