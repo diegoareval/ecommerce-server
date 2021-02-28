@@ -1,69 +1,27 @@
+import { IMailOptions } from "./../../interfaces/email.interface";
 import { findOneElement, updateOneElement } from "./../../lib/db-operations";
 import { EXPIRETIME, MESSAGES, COLLECTIONS } from "./../../config/constants";
 import { IResolvers } from "graphql-tools";
-import { transport } from "../../config/mailer";
 import JWT from "../../lib/jwt";
 import UserService from "../../services/user.service";
 import PasswordSecurity from "../../lib/hash";
+import MailService from "../../services/mail.service";
 
 // mutation para registrar usuario
 const resolversEmailMutation: IResolvers = {
   Mutation: {
     async sendEmail(_, { mail }) {
-      return new Promise((resolve, reject) => {
-        // send mail with defined transport object
-        transport.sendMail(
-          {
-            from: '"Ecommerce 👻" <diego2000avelar@gmail.com>', // sender address
-            to: mail.to, // list of receivers
-            subject: mail.subject, // Subject line
-            //text: "Hello world?", // plain text body
-            html: mail.html, // html body
-          },
-          (error, _) => {
-            error
-              ? reject({
-                  status: false,
-                  message: error,
-                })
-              : resolve({
-                  status: true,
-                  message: "correo enviado correctamente a: " + mail.to,
-                  mail,
-                });
-          }
-        );
-      });
+      return new MailService().send(mail);
     },
     async activeUserEmail(_, { id, email }) {
       const token = new JWT().sign({ user: { id, email } }, EXPIRETIME.H1);
-      console.log(token);
-
       const html = `Para activar la cuenta haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/active/${token}"> Click aqui</a>`;
-      return new Promise((resolve, reject) => {
-        // send mail with defined transport object
-
-        transport.sendMail(
-          {
-            from: '"Ecommerce 👻" <diego2000avelar@gmail.com>', // sender address
-            to: email, // list of receivers
-            subject: "Activar Usuario", // Subject line
-            html, // html body
-          },
-          (error, _) => {
-            error
-              ? reject({
-                  status: false,
-                  message: error,
-                })
-              : resolve({
-                  status: true,
-                  message: "correo enviado correctamente a: " + email,
-                  mail: null,
-                });
-          }
-        );
-      });
+      const mail: IMailOptions = {
+        html,
+        to: email,
+        subject: "Activar Usuario",
+      };
+      return new MailService().send(mail);
     },
     async activeUserAction(_, { id, birthdate, password }, { token, db }) {
       const verify = verifyToken(token, id);
@@ -98,30 +56,12 @@ const resolversEmailMutation: IResolvers = {
       console.log(token);
 
       const html = `Para cambiar la contraseña haz click sobre esto: <a href="${process.env.CLIENT_URL}/#/reset/${token}"> Click aqui</a>`;
-      return new Promise((resolve, reject) => {
-        // send mail with defined transport object
-
-        transport.sendMail(
-          {
-            from: '"Ecommerce 👻" <diego2000avelar@gmail.com>', // sender address
-            to: email, // list of receivers
-            subject: "Cambiar Contraseña", // Subject line
-            html, // html body
-          },
-          (error, _) => {
-            error
-              ? reject({
-                  status: false,
-                  message: error,
-                })
-              : resolve({
-                  status: true,
-                  message: "correo enviado correctamente a: " + email,
-                  mail: null,
-                });
-          }
-        );
-      });
+      const mail: IMailOptions = {
+        to: email, // list of receivers
+        subject: "Cambiar Contraseña", // Subject line
+        html, // html body
+      };
+      return new MailService().send(mail);
     },
     async changePassword(_, { id, password }, { db, token }) {
       //check token
@@ -142,7 +82,12 @@ const resolversEmailMutation: IResolvers = {
       // encrypt password
       password = new PasswordSecurity().hash(password);
       // update the correct user
-      return await updateOneElement(COLLECTIONS.USERS, db, { id }, {$set: { password }})
+      return await updateOneElement(
+        COLLECTIONS.USERS,
+        db,
+        { id },
+        { $set: { password } }
+      )
         .then((res) => {
           if (res.result.nModified === 1 && res.result.ok) {
             return {
